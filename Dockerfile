@@ -129,15 +129,17 @@ RUN \
     libglib2.0-0 \
     monitoring-plugins-basic \
     monitoring-plugins-standard \
-    nagios-nrpe-plugin && \
+    nagios-nrpe-plugin \
+    supervisor && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
 RUN rm -rf /etc/naemon/conf.d/*
 
+COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 COPY ./naemon.cfg /etc/naemon/naemon.cfg
 COPY ./main.cfg /etc/naemon/conf.d
 COPY ./test.sh /usr/lib/nagios/plugins/test.sh
 
-ENTRYPOINT ["naemon"]
-CMD ["/etc/naemon/naemon.cfg"]
+ENTRYPOINT ["supervisord"]
